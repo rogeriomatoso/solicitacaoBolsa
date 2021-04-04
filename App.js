@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { StyleSheet, Switch, Text, TextInput, View,} from 'react-native';
+import { Button, ScrollView, StyleSheet, Switch, Text, TextInput, View,} from 'react-native';
 import Head from './src/components/Head';
 import {Picker} from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
@@ -52,11 +51,11 @@ export default class App extends Component{
     this.idadeUsuario = this.idadeUsuario.bind(this);
   }
   nomeUsuario(texto){
-    if(texto.lenght < 0){
-      alert('Nome?');
+    if(texto.length > 0){
+      this.setState({nome: texto});      
     }
     else{
-      this.setState({nome: texto});
+      alert('Nome?');
     }
   }
 
@@ -80,87 +79,98 @@ export default class App extends Component{
 
     return (
       <View style={styles.container}>
-        <View>
-          <Head />
-        </View>
-        <View>
-          <Text style={{ fontSize: 20, textAlign: 'center', marginBottom: 20 }}> Solicitação Bolsa</Text>
-          <Text style={styles.textInput}> Selecione os parâmetros:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder='Digite seu nome:'
-            onChangeText={this.nomeUsuario}
-          />
-          <View style={{ flexDirection: 'row', alignContent: 'flex-start' }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
+            <Head />
+          </View>
+          <View>
+            <Text style={{ fontSize: 20, textAlign: 'center', marginBottom: 20 }}> Solicitação Bolsa</Text>
+            <Text style={styles.textInput}> Selecione os parâmetros:</Text>
             <TextInput
-              style={styles.idadeInput}
-              placeholder='Idade:'
-              onChangeText={this.idadeUsuario}
+              style={styles.input}
+              placeholder='Digite seu nome:'
+              onChangeText={this.nomeUsuario}
             />
-            <Picker
-              style={styles.combo1}
-              selectedValue={this.state.sexo}
-              onValueChange={(itemValue, itemIndex) => this.setState({ sexo: itemValue })}>
-              {sexosItem}
-            </Picker>
+            <View style={{ flexDirection: 'row', alignContent: 'flex-start' }}>
+              <TextInput
+                style={styles.idadeInput}
+                placeholder='Idade:'
+                onChangeText={this.idadeUsuario}
+              />
+              <Picker
+                style={styles.combo1}
+                selectedValue={this.state.sexo}
+                onValueChange={(itemValue, itemIndex) => this.setState({ sexo: itemIndex })}>
+                {sexosItem}
+              </Picker>
+            </View>
+            <View>
+              <Picker
+                style={styles.combo}
+                selectValue={this.state.curso}
+                onValueChange={(itemValue, itemIndex) => this.setState({ curso: itemValue })}>
+                {cursosItem}
+              </Picker>
+            </View>
+            <View>
+              <Picker
+                style={styles.combo}
+                selectValue={this.state.periodo}
+                onValueChange={(itemValue, itemIndex) => this.setState({ periodo: itemValue })}>
+                {periodosItem}
+              </Picker>
+            </View>
+            <View>
+              <Picker
+                style={styles.combo}
+                selectValue={this.state.turno}
+                onValueChange={(itemValue, itemIndex) => this.setState({ turno: itemValue })}>
+                {turnosItem}
+              </Picker>
+            </View>
+            <View>
+              <Text style={{fontSize:17, fontFamily:'arial', margin:10}}>Informe sua renda:</Text>
+              <Slider
+                style={{ /*margin: 10,*/ width: 300, marginBottom:40 }}
+                minimumVAalue={0}
+                maximumValue={5000}
+                onValueChange={(valorSelecionado) => this.setState({ valor: valorSelecionado })}
+                value={this.state.valor}
+                thumbTintColor = '#3D8AF7'                
+              />              
+           </View>   
+           <Button  
+            title={'Salvar'}
+            
+           
+           />
+                
+            <Text style={{ fontSize: 20, marginBottom: 20, paddingLeft: 5 }}>Informações Inseridas:</Text>
+          </View>       
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+            <View>
+              <Text style={styles.texto}>Nome: </Text>
+              <Text style={styles.texto}>Idade:  <Text style={styles.textoFinal}>{this.state.idade}</Text></Text>
+              <Text style={styles.texto}>Curso: </Text>
+              <Text style={styles.texto}>Período: <Text style={styles.textoFinal}>{this.state.periodos[this.state.periodo].semestre}</Text></Text>
+              <Text style={{ fontSize: 18, fontFamily: 'arial', marginLeft:10 }}>Renda: R$ {this.state.valor.toFixed(2)}</Text>
+            </View>
+            <View>
+              <Text style={styles.textoFinal}>{this.state.nome}</Text>
+              <Text style={styles.texto}>Sexo: <Text style={styles.textoFinal}>{this.state.sexos[this.state.sexo].genero}</Text></Text>
+              <Text style={styles.textoFinal}>{this.state.cursos[this.state.curso].nome}</Text>
+              <Text style={styles.texto}>Turno: <Text style={styles.textoFinal}>{this.state.turnos[this.state.turno].horario}</Text></Text> 
+              <View style={{flexDirection:'row'}}>                     
+                <Text style={{ fontSize: 18, fontFamily: 'arial'}}> Possui bolsa?    {(this.state.bolsa) ? 'Sim' : 'Não'}</Text>
+                <Switch
+                value={this.state.bolsa}
+                onValueChange={(valorSwitch) => this.setState({ bolsa: valorSwitch })}
+                thumbColor = '#3D8AF7'
+                />  
+              </View>        
+            </View>
           </View>
-          <View>
-            <Picker
-              style={styles.combo}
-              selectValue={this.state.curso}
-              onValueChange={(itemValue, itemIndex) => this.setState({ curso: itemValue })}>
-              {cursosItem}
-            </Picker>
-          </View>
-          <View>
-            <Picker
-              style={styles.combo}
-              selectValue={this.state.periodo}
-              onValueChange={(itemValue, itemIndex) => this.setState({ periodo: itemValue })}>
-              {periodosItem}
-            </Picker>
-          </View>
-          <View>
-            <Picker
-              style={styles.combo}
-              selectValue={this.state.turno}
-              onValueChange={(itemValue, itemIndex) => this.setState({ turno: itemValue })}>
-              {turnosItem}
-            </Picker>
-          </View>
-          <View>
-          <Slider
-            style={{ margin: 10, width: 300 }}
-            minimumVAalue={0}
-            maximumValue={5000}
-            onValueChange={(valorSelecionado) => this.setState({ valor: valorSelecionado })}
-            value={this.state.valor}
-          />
-          <Text style={{ fontSize: 18, fontFamily: 'arial', margin: 10 }}>Renda: R$ {this.state.valor.toFixed(2)}</Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'flex-start' }}>
-          <Text style={{ margin: 10, fontSize: 18, fontFamily: 'arial',alignContent: 'flex-start' }}>Possui bolsa?      {(this.state.bolsa) ? 'Sim' : 'Não'}</Text>
-          <Switch
-            value={this.state.bolsa}
-            onValueChange={(valorSwitch) => this.setState({ bolsa: valorSwitch })}
-          />
-        </View>
-          <Text style={{ fontSize: 20, marginBottom: 20, paddingLeft: 5 }}>Informações Inseridas:</Text>
-        </View>       
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-          <View>
-            <Text style={styles.texto}>Nome: </Text>
-            <Text style={styles.texto}>Idade:  <Text style={styles.textoFinal}>{this.state.idade}</Text></Text>
-            <Text style={styles.texto}>Curso: </Text>
-            <Text style={styles.texto}>Período: <Text style={styles.textoFinal}>{this.state.periodos[this.state.periodo].semestre}</Text></Text>
-          </View>
-          <View>
-            <Text style={styles.textoFinal}>{this.state.nome}</Text>
-            <Text style={styles.texto}>Sexo: <Text style={styles.textoFinal}>{this.state.sexos[this.state.sexo].genero}</Text></Text>
-            <Text style={styles.textoFinal}>{this.state.cursos[this.state.curso].nome}</Text>
-            <Text style={styles.texto}>Turno: <Text style={styles.textoFinal}>{this.state.turnos[this.state.turno].horario}</Text></Text>
-          </View>
-        </View>
+        </ScrollView>  
       </View>
     )
   }
